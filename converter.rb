@@ -14,7 +14,6 @@ class TumblrImport
     recurse_directories
   end
 
-  # recurse through the script directory and find .html posts to send to Tumblr
   def recurse_directories
     Find.find(Dir.getwd) do |file|
       if !File.directory? file and File.extname(file) == '.html'
@@ -26,7 +25,6 @@ class TumblrImport
     puts "#{count} posts were parsed and pushed to Tumblr. Go check!"
   end
 
-  # Parse the .html file for the Tumblr API
   def parse_file file
     post = Nokogiri::HTML(open(file))
     # this needs work... cant quite figure out how to snatch the datetime attribute from a <time> tag yet
@@ -37,10 +35,8 @@ class TumblrImport
     tumblr_push title, body, tags
   end
 
-  # Push data to Tumblr
   def tumblr_push title, body, published
-    # oauth authenticate
-    # POST to /post
+
   end
 end
 
