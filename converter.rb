@@ -36,7 +36,7 @@ class TumblrImport
     tumblr_push title, body, tags
   end
 
-  def tumblr_push title, body, published
+  def tumblr_push title, body, tags
 
   end
 end
