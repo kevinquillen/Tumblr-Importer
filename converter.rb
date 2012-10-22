@@ -1,15 +1,16 @@
 require 'find'
 require 'rubygems'
-require 'highline/import'
 require 'nokogiri'
 require 'oauth'
+require 'json'
 
 class TumblrImport
   attr_accessor :api_key
 
-  def initialize (api_key)
-    @api_key = api_key
-
+  def initialize (consumer_key, consumer_secret)
+    @consumer_key = api_key
+    @consumer_secret = consumer_secret
+                 oauth_request_token
     puts "Searching for .html posts to send to Tumblr..."
     recurse_directories
   end
@@ -40,10 +41,34 @@ class TumblrImport
   def tumblr_push title, body, tags
 
   end
+
+  def oauth_request_token
+    @consumer = OAuth::Consumer.new(@consumer_key, @consumer_secret,
+                                  :site => 'http://www.tumblr.com/',
+                                  :request_token_path => '/oauth/request_token',
+                                  :access_token_path => '/oauth/access_token',
+                                  :authorize_path => '/oauth/authorize')
+
+    @request_token = @consumer.get_request_token(:oauth_callback => @callback_url)
+    @request_token.authorize_url(:oauth_callback => 'http://www.tumblr.com/api/authenticate')
+    @access_token = @request_token.get_access_token
+
+    test = @access_token.get('http://api.tumblr.com/v2/blog/kevinquillen.tumblr.com/info')
+
+    #access_token = OAuth::AccessToken.new(consumer)
+
+    #response = access_token.request(:get, "http://api.tumblr.com/v2/blog/kevinquillen.tumblr.com/info")
+    #response = JSON.parse(response)
+    puts test
+    exit
+  end
 end
 
-# ask user for API key, validate the input is a string with length
-api_key = ask("What is your Tumblr API key? This is used to establish OAuth connection. API Key: ", String) { |s| s.validate = /^[a-zA-Z0-9]+${1,}/ }
+puts "What is your Tumblr OAuth Consumer Key? This is used to establish OAuth connection. Consumer Key: "
+consumer_key = gets.strip
+
+puts "What is your Tumblr consumer secret key? This is used to establish OAuth connection. Consumer Secret Key: "
+consumer_secret = gets.strip
 
 # Start import
-TumblrImport.new(api_key)
+TumblrImport.new(consumer_key, consumer_secret)
