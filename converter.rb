@@ -4,20 +4,21 @@ require 'nokogiri'
 require 'oauth'
 
 class TumblrImport
-  attr_accessor :count, :api_key
+  attr_accessor :api_key
 
-  def initialize
-    @count = 0
-    @api_key = 'YOURAPIKEYHERE'
+  def initialize (api_key = 'YOURAPIKEYHERE')
+    @api_key = api_key
 
     puts "Searching for .html posts to send to Tumblr..."
     recurse_directories
   end
 
   def recurse_directories
+    count = 0
+
     Find.find(Dir.getwd) do |file|
       if !File.directory? file and File.extname(file) == '.html'
-        @count += 1
+        count += 1
         parse_file file
       end
     end
@@ -41,4 +42,4 @@ class TumblrImport
 end
 
 # Start import
-TumblrImport.new()
+TumblrImport.new('ABCDEF12345')
