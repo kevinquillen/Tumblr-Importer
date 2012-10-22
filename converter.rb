@@ -1,12 +1,13 @@
 require 'find'
 require 'rubygems'
+require 'highline/import'
 require 'nokogiri'
 require 'oauth'
 
 class TumblrImport
   attr_accessor :api_key
 
-  def initialize (api_key = 'YOURAPIKEYHERE')
+  def initialize (api_key)
     @api_key = api_key
 
     puts "Searching for .html posts to send to Tumblr..."
@@ -41,5 +42,8 @@ class TumblrImport
   end
 end
 
+# ask user for API key, validate the input is a string with length
+api_key = ask("What is your Tumblr API key? This is used to establish OAuth connection. API Key: ", String) { |s| s.validate = /^[a-zA-Z0-9]+${1,}/ }
+
 # Start import
-TumblrImport.new('ABCDEF12345')
+TumblrImport.new(api_key)
