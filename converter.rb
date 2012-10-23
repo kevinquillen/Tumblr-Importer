@@ -59,7 +59,7 @@ end
 puts "What is your Tumblr OAuth Consumer Key? This is used to establish OAuth connection. Consumer Key: "
 consumer_key = gets.strip
 
-puts "What is your Tumblr consumer secret key? This is used to establish OAuth connection. Consumer Secret Key: "
+puts "What is your Tumblr OAuth Consumer Secret Key? This is used to establish OAuth connection. Consumer Secret Key: "
 consumer_secret = gets.strip
 
 # Start import
