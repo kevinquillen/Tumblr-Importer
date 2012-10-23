@@ -2,15 +2,13 @@ require 'find'
 require 'rubygems'
 require 'nokogiri'
 require 'oauth'
-require 'json'
 
 class TumblrImport
   attr_accessor :api_key
 
   def initialize (consumer_key, consumer_secret)
-    @consumer_key = api_key
+    @consumer_key = consumer_key
     @consumer_secret = consumer_secret
-                 oauth_request_token
     puts "Searching for .html posts to send to Tumblr..."
     recurse_directories
   end
@@ -31,15 +29,15 @@ class TumblrImport
   def parse_file file
     post = Nokogiri::HTML(open(file))
     # this needs work... cant quite figure out how to snatch the datetime attribute from a <time> tag yet
-    # published = post.css('time:first-child').map {|time| time.content}
+    published = post.css('time:first-child').text
     title = post.css('h1.entry-title').text
     body = post.css('div.entry-content').text
     tags = post.css('span.categories a').map{|category| category.content}.join(', ')
-    tumblr_push title, body, tags
+    tumblr_push title, body, tags, published
   end
 
-  def tumblr_push title, body, tags
-
+  def tumblr_push title, body, tags, published
+    # this will push our arguments as a Tumblr post via /post of Tumblr API
   end
 
   def oauth_request_token
@@ -49,18 +47,12 @@ class TumblrImport
                                   :access_token_path => '/oauth/access_token',
                                   :authorize_path => '/oauth/authorize')
 
+
     @request_token = @consumer.get_request_token(:oauth_callback => @callback_url)
     @request_token.authorize_url(:oauth_callback => 'http://www.tumblr.com/api/authenticate')
     @access_token = @request_token.get_access_token
 
-    test = @access_token.get('http://api.tumblr.com/v2/blog/kevinquillen.tumblr.com/info')
-
-    #access_token = OAuth::AccessToken.new(consumer)
-
-    #response = access_token.request(:get, "http://api.tumblr.com/v2/blog/kevinquillen.tumblr.com/info")
-    #response = JSON.parse(response)
-    puts test
-    exit
+    #puts @access_token
   end
 end
 
