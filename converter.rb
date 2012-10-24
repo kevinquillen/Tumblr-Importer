@@ -4,11 +4,14 @@ require 'nokogiri'
 require 'oauth'
 
 class TumblrImport
-  attr_accessor :api_key
+  attr_accessor :consumer_key, :consumer_secret, :request_token
 
   def initialize (consumer_key, consumer_secret)
     @consumer_key = consumer_key
     @consumer_secret = consumer_secret
+    puts "Authenticating with Tumblr..."
+    oauth_request_token
+    # if request token is bad, stop here
     puts "Searching for .html posts to send to Tumblr..."
     recurse_directories
   end
@@ -43,16 +46,13 @@ class TumblrImport
   def oauth_request_token
     @consumer = OAuth::Consumer.new(@consumer_key, @consumer_secret,
                                   :site => 'http://www.tumblr.com/',
+                                  :scheme => :header,
+                                  :method => :post,
                                   :request_token_path => '/oauth/request_token',
                                   :access_token_path => '/oauth/access_token',
                                   :authorize_path => '/oauth/authorize')
 
-
-    @request_token = @consumer.get_request_token(:oauth_callback => @callback_url)
-    @request_token.authorize_url(:oauth_callback => 'http://www.tumblr.com/api/authenticate')
-    @access_token = @request_token.get_access_token
-
-    #puts @access_token
+    @request_token = @consumer.get_request_token
   end
 end
 
