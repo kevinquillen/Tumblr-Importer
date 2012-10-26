@@ -16,7 +16,7 @@ The script will then look for all .html files in all the directories, and pick o
 
 Since this script was based on Octopress, Nokogiri is looking for the following elements with these classes:
 
-Post Title: 'h1.entry-title'
-Post Body:  'div.entry-content'
-Post Tags:  'span.categories a'
-Post Date:  'time'
+* Post Title: 'h1.entry-title'
+* Post Body:  'div.entry-content'
+* Post Tags:  'span.categories a'
+* Post Date:  'time'
