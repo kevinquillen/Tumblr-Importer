@@ -9,8 +9,11 @@ Setup
 =====
 
 1. Assemble all the HTML files you wish to import as posts, and drop them into an 'html' folder in the same folder the converter.rb script is contained.
-2. Place your OAuth key at the top to use to connect to your Tumblr.
+2. Setup an Application at Tumblr, and keep a browser window open containing the OAuth Consumer Key and Secret Key. The callback URL should be http://localhost/.
 3. From the command line, navigate to the directory containing converter.rb, and type 'ruby converter.rb'.
+4. Enter each value at the prompt, your blog hostname and OAuth keys.
+5. If OAuth request is successful, it will give you an authorization URL. Post this into your browser, and allow the app access to your Tumblr account.
+6. When redirected to http://localhost/, copy the OAuth Verifier key in the URL, and paste that back into the command line when prompted. If authentication is successful, all posts will start moving to Tumblr.
 
 The script will then look for all .html files in all the directories, and pick out the title, body content, category tags, and publish date using Nokogiri.
 
